@@ -1,0 +1,6 @@
+[submodule "lib/can_interface"]
+	path = lib/can_interface
+	url = https://github.com/RobotikUTT/Info-2019_Interface.git
+[submodule "lib/ArduinoSTL"]
+	path = lib/ArduinoSTL
+	url = https://github.com/mike-matera/ArduinoSTL.git
