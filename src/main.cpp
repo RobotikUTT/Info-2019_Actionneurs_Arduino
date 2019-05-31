@@ -32,13 +32,14 @@ Servo servoPuckTaker;
 uint8_t currentAction = 0;//0:action finished
 
 bool lastSWStepperState = LOW;
+bool heightGoalSet = false;
 
 //long t = 0;
 
 void setup() {
   // Serial frames
-  //serialHandler.begin(57600);
-  Serial.begin(57600);
+  serialHandler.begin(57600);
+  //Serial.begin(57600);
   controlFront.begin();
   controlBack.begin();
   //controlFront.launchCalibration(); //done by sw stepper test
@@ -68,22 +69,42 @@ void setup() {
 
 void loop() {
   //For setup stepper values :
-  if (Serial.available()) {
+  /*if (Serial.available()) {
     int tmp = (int)Serial.parseInt();
     stepperBack.moveStep(abs(tmp), (1+tmp/abs(tmp))/2);
     Serial.println(stepperBack.getPositionStep());
+  }*/
+
+  // If a height command is processing
+  if (heightGoalSet) {
+    // And it's done
+    if (stepperBack.getRemainingStep() == 0 && stepperFront.getRemainingStep() == 0) {
+      // Send callback
+      serialHandler.send(YOUR_DOCK_HAS_FULLFILLED_YOUR_REQUEST);
+      heightGoalSet = false;
+    }
+
   }
 
-  //Communication :
-  /*  std::vector<int> frame = serialHandler.read();
+  // Communication :
+  std::vector<int> frame = serialHandler.read();
 	if (serialHandler.is(frame, SET_DOCK_HEIGHT)) {
-    int front = frame[1];
-    int back = frame[2];
+    int16_t front = frame[1];
+    int16_t back = frame[2];
 
     // TODO set height for both sides
-
-    serialHandler.send(YOUR_DOCK_HAS_FULLFILLED_YOUR_REQUEST);
-	}*/
+    heightGoalSet = true;
+    controlFront.setHeightInMM(front);
+    controlBack.setHeightInMM(back);
+	} else if (serialHandler.is(frame, FETCH_PUCK)) {
+    #define SERVO_DEPLIED 180
+    servoPuckTaker.write(SERVO_DEPLIED);
+    delay(1000);
+    #define SERVO_REPLIED 10
+    servoPuckTaker.write(SERVO_REPLIED);
+    delay(1000);
+    serialHandler.send(PUCK_FETCHED_CHIEF);
+  }
   /*if(millis() - t > 100)
   {
     Serial.println(stepperFront.getRemainingStep());
