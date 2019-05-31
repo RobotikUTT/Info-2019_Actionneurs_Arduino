@@ -35,23 +35,32 @@ void StepperControl::begin()
 
 void StepperControl::update()
 {
-	if (calibrationState == IN_PROGRESS) {
-		if (digitalRead(endStopPin) == LOW) {
-			calibrationState = DONE;
-			if (motorPos == HIGH) {
-				stepper->setPositionStep(maxStep);
+	if (calibrationState == IN_PROGRESS) {//si calibration en cours
+		if ((digitalRead(endStopPin) == LOW) && (calibrationProgressState != 1)) {//si fin de course enclenche
+			calibrationProgressState++;//on passe a l'etape suivante
+			if (calibrationProgressState == 1) {
+				stepper->moveStep(STEP_NB_FOR_SECOND_PART_CALIBRATION, 1 - (endStopPos+motorPos)%2);
+			}
+			else if (calibrationProgressState == 3) {//si on a touche pour la deuxieme fois le fin de course
+				calibrationState = DONE;//on a fini la calibration
+				if (motorPos == HIGH) {
+					stepper->setPositionStep(maxStep);
+				}
+				else
+				{
+					stepper->setPositionStep(0);
+				}
+				setHeightInMM(standbyHeight);
+			}
+		}
+		else if (stepper->getRemainingStep() == 0) {
+			if (calibrationProgressState == 1) {
+				calibrationProgressState = 2;
 			}
 			else
 			{
-				stepper->setPositionStep(0);
+				stepper->moveStep(1, (endStopPos+motorPos)%2);
 			}
-			setHeightMM(standbyHeight);
-		}
-		else if (stepper->getRemainingStep() == 0) {
-			if (calibrationProgressState == 0) {
-				/* code */
-			}
-			stepper->moveStep(1, (endStopPos+motorPos)%2);
 		}
 	}
 	stepper->update();//At, int posMMOffSet the end of the StepperControl::update()
@@ -63,14 +72,21 @@ void StepperControl::launchCalibration()
 	calibrationProgressState = 0;
 }
 
-void StepperControl::setPositionStep(int pos)
+void StepperControl::setPositionInStep(int pos)
 {
-	stepper->moveStep(pos - stepper->getGoalStep(), motorPos);
+	Serial.print("A = ");
+	Serial.println(stepper->getGoalStep());
+	//stepper->moveStep(pos - stepper->getGoalStep(), (endStopPos+motorPos)%2);
+	stepper->moveStep(pos - stepper->getGoalStep(), 0);
+	Serial.print("B = ");
+	Serial.println(pos);
 }
 
-void StepperControl::setHeightMM(int height)
+void StepperControl::setHeightInMM(int height)
 {
-	setPositionStep(map(height, posMMOffSet, maxheight, 0, maxStep));
+	Serial.print("C = ");
+	Serial.println(height);
+	setPositionInStep(map(height, posMMOffSet, maxheight, 0, maxStep));
 }
 
 uint8_t StepperControl::getStatus()

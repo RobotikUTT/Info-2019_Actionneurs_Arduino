@@ -9,6 +9,8 @@
 
 /** Defines **/
 /*************/
+#define STEP_NB_FOR_SECOND_PART_CALIBRATION 100
+
 //calibration state :
 #define TODO        0
 #define IN_PROGRESS 1
@@ -37,8 +39,8 @@ class StepperControl
 		void begin();
 		void update();
 		void launchCalibration();
-		void setPositionStep(int pos);
-		void setHeightMM(int height);
+		void setPositionInStep(int pos);
+		void setHeightInMM(int height);
 		uint8_t getStatus();
 
 };
