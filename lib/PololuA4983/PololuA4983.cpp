@@ -147,3 +147,9 @@ int16_t PololuA4983::getGoalStep()
 {
 	return m_position_step + m_remaining_steps;
 }
+
+void PololuA4983::setPositionStep(int pos)
+{
+	m_position_step = pos;
+	m_remaining_steps = 0;
+}

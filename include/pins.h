@@ -9,5 +9,11 @@
 #define DIR_PIN_BACK    A2
 #define EN_PIN_BACK     5
 
+#define END_STOP_PIN_F  2
+
+#define PIN_SERVO_PLATFORM0  7
+#define PIN_SERVO_PLATFORM1  8
+#define PIN_SERVO_PUCK_TAKER 11
+
 
 #endif

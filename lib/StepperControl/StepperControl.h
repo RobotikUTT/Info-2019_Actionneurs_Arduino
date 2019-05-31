@@ -21,20 +21,25 @@ class StepperControl
 {
 	private:
 		uint8_t calibrationState = TODO;
+		uint8_t calibrationProgressState;
 		PololuA4983 *stepper;
+		uint8_t endStopPin;
 		int maxStep;
+		int maxheight;//max heigh with offset
 		int standbyHeight;
 		bool endStopPos;
 		bool motorPos;
 		int posMMOffSet;
 
 	public:
-		StepperControl(PololuA4983 *stepper, int maxStep, int standbyHeight, bool endStopPos, bool motorPos, int posMMOffSet);
+		StepperControl(PololuA4983 *stepper, uint8_t endStopPin, int maxStep, int maxheight, int standbyHeight, bool endStopPos, bool motorPos, int posMMOffSet);
 		~StepperControl();
+		void begin();
 		void update();
 		void launchCalibration();
 		void setPositionStep(int pos);
 		void setHeightMM(int height);
+		uint8_t getStatus();
 
 };
 

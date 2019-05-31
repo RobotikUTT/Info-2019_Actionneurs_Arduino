@@ -44,6 +44,7 @@ class PololuA4983
 		int16_t getRemainingStep();
 		int16_t getPositionStep();
 		int16_t getGoalStep();
+		void setPositionStep(int pos);
 
 
 
