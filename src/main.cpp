@@ -38,8 +38,8 @@ bool heightGoalSet = false;
 
 void setup() {
   // Serial frames
-  serialHandler.begin(57600);
-  //Serial.begin(57600);
+  //serialHandler.begin(57600);
+  Serial.begin(57600);
   controlFront.begin();
   controlBack.begin();
   //controlFront.launchCalibration(); //done by sw stepper test
@@ -52,8 +52,8 @@ void setup() {
   pinMode(PIN_SW_STEPPER_STATE, INPUT_PULLUP);
   pinMode(PIN_LED_STEPPER_STATE, OUTPUT);
 
-  setServoPlatform(100);
-  servoPuckTaker.write(180);
+  setServoPlatform(40);
+  servoPuckTaker.write(SERVO_REPLIED);
   /*delay(3000);
   servoPuckTaker.write(90);
   delay(3000);
@@ -71,8 +71,8 @@ void loop() {
   //For setup stepper values :
   /*if (Serial.available()) {
     int tmp = (int)Serial.parseInt();
-    stepperBack.moveStep(abs(tmp), (1+tmp/abs(tmp))/2);
-    Serial.println(stepperBack.getPositionStep());
+    stepperFront.moveStep(abs(tmp), (1+tmp/abs(tmp))/2);
+    Serial.println(stepperFront.getPositionStep());
   }*/
 
   // If a height command is processing
@@ -97,12 +97,10 @@ void loop() {
     controlFront.setHeightInMM(front);
     controlBack.setHeightInMM(back);
 	} else if (serialHandler.is(frame, FETCH_PUCK)) {
-    #define SERVO_DEPLIED 180
     servoPuckTaker.write(SERVO_DEPLIED);
-    delay(1000);
-    #define SERVO_REPLIED 10
+    delay(2000);
     servoPuckTaker.write(SERVO_REPLIED);
-    delay(1000);
+    delay(2000);
     serialHandler.send(PUCK_FETCHED_CHIEF);
   }
   /*if(millis() - t > 100)

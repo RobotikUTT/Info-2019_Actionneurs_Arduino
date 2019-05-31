@@ -74,18 +74,11 @@ void StepperControl::launchCalibration()
 
 void StepperControl::setPositionInStep(int pos)
 {
-	Serial.print("A = ");
-	Serial.println(stepper->getGoalStep());
-	//stepper->moveStep(pos - stepper->getGoalStep(), (endStopPos+motorPos)%2);
 	stepper->moveStep(pos - stepper->getGoalStep(), 0);
-	Serial.print("B = ");
-	Serial.println(pos);
 }
 
 void StepperControl::setHeightInMM(int height)
 {
-	Serial.print("C = ");
-	Serial.println(height);
 	setPositionInStep(map(height, posMMOffSet, maxheight, 0, maxStep));
 }
 
