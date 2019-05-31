@@ -23,5 +23,6 @@
 #define SERVO_DEPLIED 180
 #define SERVO_REPLIED 10
 
+#define NB_LED_SEGS   9
 
 #endif
