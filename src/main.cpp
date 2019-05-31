@@ -65,9 +65,14 @@ void loop() {
   }
 
   //Communication :
-  /*std::vector<int> frame = serialHandler.read();
-	if (serialHandler.is(frame, UPDATE_SCREEN)) {
-    // SOME CODE HERE
+  /*  std::vector<int> frame = serialHandler.read();
+	if (serialHandler.is(frame, SET_DOCK_HEIGHT)) {
+    int front = frame[1];
+    int back = frame[2];
+
+    // TODO set height for both sides
+
+    serialHandler.send(YOUR_DOCK_HAS_FULLFILLED_YOUR_REQUEST);
 	}*/
 
   //update stepper motors and stepper motor controls :
